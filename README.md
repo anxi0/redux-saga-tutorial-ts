@@ -1,7 +1,5 @@
 # Redux-Saga example
 
----
-
 ## Abstract
 
 1. redux-saga app
