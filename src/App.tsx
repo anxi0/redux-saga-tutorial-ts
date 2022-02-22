@@ -1,24 +1,64 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import "./App.css";
+import { useDispatch, useSelector } from "react-redux";
+import { CONFIG_LOAD } from "./store/actions/config";
+import {
+  increase,
+  asyncIncrease,
+  decrease,
+  asyncDecrease,
+} from "./store/actions/counter";
 
 function App() {
+  const config = useSelector<any, any>((state) => state.configReducer);
+  const count = useSelector<any, any>((state) => state.counterReducer);
+  const dispatch = useDispatch();
+  const [chosen, setChosen] = useState<string>("");
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <div style={{ display: "flex", width: "100%", height: "100%" }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          textAlign: "center",
+          width: "100%",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            width: "100%",
+            boxSizing: "border-box",
+          }}
         >
-          Learn React
-        </a>
-      </header>
+          <div>
+            <button onClick={() => dispatch(increase())}>INC</button>
+            <button onClick={() => dispatch(asyncIncrease())}>ASY_INC</button>
+          </div>
+          <div>{count}</div>
+          <div>
+            <button onClick={() => dispatch(decrease())}>DEC</button>
+            <button onClick={() => dispatch(asyncDecrease())}>ASY_DEC</button>
+          </div>
+        </div>
+
+        <div>
+          <button onClick={() => dispatch({ type: CONFIG_LOAD })}>click</button>
+        </div>
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          {config === "" ? (
+            <div>{config}</div>
+          ) : (
+            <div>
+              {Object.keys(config).map((cur) => (
+                <div onClick={() => setChosen(cur)}>{cur}</div>
+              ))}
+            </div>
+          )}
+        </div>
+        <div>{chosen !== "" && config[chosen]}</div>
+      </div>
     </div>
   );
 }
